@@ -17,10 +17,7 @@ async function connectToDatabase() {
     return cachedDb;
   }
 
-  const db = await mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  const db = await mongoose.connect(process.env.MONGODB_URI);
   cachedDb = db; // Save connection to the cache
   return db;
 }
