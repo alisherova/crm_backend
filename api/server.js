@@ -7,7 +7,6 @@ const tasksRouter = require("./routes/task");
 dotenv.config();
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
@@ -20,9 +19,9 @@ mongoose
   .catch((err) => console.log("MongoDB connection error:", err));
 
 app.get("/", (req, res) => {
-  res.send("Backend is running!");
+  res.send("Hello, world!");
 });
 
 app.use("/tasks", tasksRouter);
 
-module.exports = app;
+module.exports = app; // Export the app
