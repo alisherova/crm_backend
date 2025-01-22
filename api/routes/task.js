@@ -1,13 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const Task = require("../models/Task");
+const Task = require("../../models/Task");
 
-// GET all tasks and group them by date
 router.get("/", async (req, res) => {
   try {
-    const tasks = await Task.find(); // Fetch all tasks
+    const tasks = await Task.find();
 
-    // Group tasks by date
     const groupedTasks = tasks.reduce((acc, task) => {
       if (!acc[task.date]) {
         acc[task.date] = {
@@ -21,7 +19,6 @@ router.get("/", async (req, res) => {
       return acc;
     }, {});
 
-    // Convert the grouped object to an array
     const groupedTasksArray = Object.values(groupedTasks);
 
     res.status(200).json(groupedTasksArray);
@@ -30,7 +27,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// POST a new task
 router.post("/", async (req, res) => {
   try {
     const { title, description, priority, status, avatar, isChecked, date } =
