@@ -24,4 +24,4 @@ app.get("/", (req, res) => {
 
 app.use("/tasks", tasksRouter);
 
-module.exports = app; // Export the app
+module.exports = app;
