@@ -1,8 +1,9 @@
 const express = require("express");
+const serverless = require("serverless-http");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const tasksRouter = require("./routes/task");
+const tasksRouter = require("../routes/task");
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ async function connectToDatabase() {
 app.use(async (req, res, next) => {
   try {
     await connectToDatabase();
+    console.log("Mongodb connected");
     next(); // Proceed to the next middleware or route
   } catch (err) {
     console.error("Failed to connect to database", err);
@@ -39,5 +41,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/tasks", tasksRouter);
+app.use("/.netlify/functions/api", tasksRouter);
 
-module.exports = app;
+module.exports.handler = serverless(app);
