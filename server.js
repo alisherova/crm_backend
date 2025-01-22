@@ -10,11 +10,33 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log("MongoDB connection error:", err));
+let cachedDb = null; // Cache the MongoDB connection
 
+async function connectToDatabase() {
+  if (cachedDb) {
+    return cachedDb;
+  }
+
+  const db = await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  cachedDb = db; // Save connection to the cache
+  return db;
+}
+
+// Ensure database connection before handling any routes
+app.use(async (req, res, next) => {
+  try {
+    await connectToDatabase();
+    next(); // Proceed to the next middleware or route
+  } catch (err) {
+    console.error("Failed to connect to database", err);
+    res.status(500).json({ message: "Database connection error", error: err });
+  }
+});
+
+// Define routes
 app.get("/", (req, res) => {
   res.send("Hello, world!");
 });
